@@ -317,9 +317,11 @@ def displayinfo():
             drawtemp(px+0,i+8,wi[1])
             drawhumi(px+0,i+16,wi[3])
             drawwind(px+0,i+24,wi[2])
-            if wi[5]>0.0:
-                drawpop(px+0,i+16,wi[5])
             disp.text('%3d%%' % (wi[6]),px+50,i+8)
+            if wi[5]>0.0:
+                drawpop(px+50,i+16,wi[5])
+            elif wi[8]>0.0:
+                drawuvi(px+50,i+16,wi[8])
             if wi[9]>0.0:
                 disp.text('%f' % (wi[9]),px+50,i+24)
             if fileexists(wi[4]):
