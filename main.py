@@ -283,8 +283,8 @@ def drawhumi(x,y,h):
     disp.text('%2d%%' % (h),x+10,y)
     
 def drawpop(x,y,pop):
-    dusp.text('P',x,y)
-    disp.text('%2d%%' % (xp),x+10,y)
+    xp=int(pop)
+    disp.text('%2d%%' % (xp),x,y)
     
 def drawwind(x,y,wind):
     disp.text('W',x,y)
