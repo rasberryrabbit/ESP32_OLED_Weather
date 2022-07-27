@@ -24,6 +24,7 @@ i2c=SoftI2C(scl=Pin(4),sda=Pin(5))
 disp=sh1106.SH1106_I2C(128,64,i2c,None,0x3c,rotate=180)
 disp.fill(0)
 disp.show()
+disp.contrast(0x5f)
 
 # read config       
 config=configreader.ConfigReader()
@@ -239,9 +240,8 @@ class OpenWeather:
                            spop=re.search("pop\":([0-9\.]+)",data)
                            if spop:
                                vpop=float(spop.group(1))
-                               vpop*=100
                            else:
-                               vpop=0
+                               vpop=0.0
                            srain=re.search("rain\":{\"1h\":([0-9\.]+)",data)
                            if srain:
                                rain=float(srain.group(1))
@@ -283,12 +283,12 @@ def drawhumi(x,y,h):
     disp.text('%2d%%' % (h),x+10,y)
     
 def drawpop(x,y,pop):
-    xp=int(pop)
+    xp=int(pop*100)
     disp.text('%2d%%' % (xp),x,y)
     
 def drawwind(x,y,wind):
     disp.text('W',x,y)
-    disp.text('%3.1fm' % (wind),x+10,y)
+    disp.text('%4.1f' % (wind),x+10,y)
     
 def drawuvi(x,y,uvi):
     disp.text('%4.2f' % (uvi),x,y)
@@ -337,12 +337,21 @@ tmTime=Timer(0)
 # update every 5 minutes
 tmUpdate = Timer(1)
 
+timeoff=0
+
 def cbTime(t):
+    global timeoff
     disp.fill_rect(0,0,58,8,0)
     tmx=random.randint(0,2)
     rt=time.localtime(time.time()+winfo.timeoffset)
     disp.text('%2d:%02d' %(rt[3],rt[4]),tmx+0,0)
     disp.show()
+    if timeoff>5:
+        timeoff=0
+        disp.contrast(0x5f)
+    elif timeoff>3:
+        disp.contrast(0)
+    timeoff+=1
        
 def cbUpdate(t):
     tmTime.deinit()
