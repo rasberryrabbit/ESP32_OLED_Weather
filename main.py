@@ -362,6 +362,7 @@ def displayinfoex(bpop):
                 if wi[8]>0.0:
                     drawuvi(px+50,i+16,wi[8])
                 disp.text('%4d' % (wi[7]),px+50,i+24)
+            disp.fill_rect(91,i,37,32,0)
             if fileexists(wi[4]):
                 loadpbm(px+90,i,wi[4])
             else:
