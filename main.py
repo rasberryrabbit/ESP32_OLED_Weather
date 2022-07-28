@@ -99,7 +99,7 @@ def tryconnect(dispid):
                   if dispid:
                       disp.text(ssid,0,8)
                   print('ReConnect %s' % (ssid))
-          disp.fill_rect(120,0,128,8,0)
+          disp.fill_rect(120,0,9,8,0)
           disp.text(delaych[trycounter % 4],120,0)
           disp.show()
           time.sleep_ms(500)
@@ -108,6 +108,7 @@ def tryconnect(dispid):
 tryconnect(True)
 
 def synctime():
+    counter=0
     while True:
         try:
             ntptime.settime()
@@ -115,6 +116,10 @@ def synctime():
         except Exception as e:
             print(e)
             print("sync time")
+            disp.fill_rect(120,0,9,8,0)
+            disp.text(delaych[counter % 4],120,0)
+            disp.show()
+            counter+=1
         time.sleep(1)
 
 # ntp time
@@ -280,11 +285,11 @@ def drawtemp(x,y,t):
     
 def drawhumi(x,y,h):
     disp.text('H',x,y)
-    disp.text('%2d%%' % (h),x+10,y)
+    disp.text('%3d%%' % (h),x+10,y)
     
 def drawpop(x,y,pop):
     xp=int(pop*100)
-    disp.text('%2d%%' % (xp),x,y)
+    disp.text('%3d%%' % (xp),x,y)
     
 def drawwind(x,y,wind):
     disp.text('W',x,y)
@@ -305,11 +310,13 @@ def loadpbm(x,y,fname):
     fimg=framebuf.FrameBuffer(data,32,32,framebuf.MONO_HLSB)
     disp.blit(fimg,x,y)
 
-def displayinfo():
+def displayinfo(bpop):
     i=0
     idx=0
     px=random.randint(0,2)
     disp.fill(0)
+    rt=time.localtime(time.time()+winfo.timeoffset)
+    disp.text('%2d:%02d' %(rt[3],rt[4]),px+0,0)
     for wi in winfo.weinfo:
         if idx>0:
             dt=epochtotime(wi[0],winfo.timeoffset)
@@ -318,12 +325,15 @@ def displayinfo():
             drawhumi(px+0,i+16,wi[3])
             drawwind(px+0,i+24,wi[2])
             disp.text('%3d%%' % (wi[6]),px+50,i+8)
-            if wi[5]>0.0:
-                drawpop(px+50,i+16,wi[5])
-            elif wi[8]>0.0:
-                drawuvi(px+50,i+16,wi[8])
-            if wi[9]>0.0:
-                disp.text('%f' % (wi[9]),px+50,i+24)
+            if bpop:
+                if wi[5]>0.0:
+                    drawpop(px+50,i+16,wi[5])
+                if wi[9]>0.0:
+                    disp.text('%f' % (wi[9]),px+50,i+24)
+            else:
+                if wi[8]>0.0:
+                    drawuvi(px+50,i+16,wi[8])
+                disp.text('%4d' % (wi[7]),px+50,i+24)
             if fileexists(wi[4]):
                 loadpbm(px+90,i,wi[4])
             else:
@@ -332,20 +342,46 @@ def displayinfo():
             i+=32
         idx+=1
     disp.show()
-
+    
+def displayinfoex(bpop):
+    i=0
+    idx=0
+    px=random.randint(0,2)
+    rt=time.localtime(time.time()+winfo.timeoffset)
+    disp.fill_rect(0,0,49,8,0)
+    disp.text('%2d:%02d' %(rt[3],rt[4]),px+0,0)
+    for wi in winfo.weinfo:
+        if idx>0:
+            disp.fill_rect(50,i+16,41,16,0)
+            if bpop:
+                if wi[5]>0.0:
+                    drawpop(px+50,i+16,wi[5])
+                if wi[9]>0.0:
+                    disp.text('%f' % (wi[9]),px+50,i+24)
+            else:
+                if wi[8]>0.0:
+                    drawuvi(px+50,i+16,wi[8])
+                disp.text('%4d' % (wi[7]),px+50,i+24)
+            if fileexists(wi[4]):
+                loadpbm(px+90,i,wi[4])
+            else:
+                print('error',wi[4])
+            i+=32
+        idx+=1
+    disp.show()    
+    
 tmTime=Timer(0)
 # update every 5 minutes
 tmUpdate = Timer(1)
 
 timeoff=0
+showuvi=0
 
 def cbTime(t):
-    global timeoff
-    disp.fill_rect(0,0,58,8,0)
-    tmx=random.randint(0,2)
-    rt=time.localtime(time.time()+winfo.timeoffset)
-    disp.text('%2d:%02d' %(rt[3],rt[4]),tmx+0,0)
-    disp.show()
+    global timeoff,showuvi
+    displayinfoex(showuvi<2)
+    showuvi+=1
+    showuvi%=4
     if timeoff>5:
         timeoff=0
         disp.contrast(0x5f)
@@ -360,7 +396,7 @@ def cbUpdate(t):
         winfo.imgoffset=0
         if winfo.GetInfo():
             #print(winfo.weinfo)
-            displayinfo()
+            displayinfo(True)
             print('ok')
         else:
             if winfo.error_count>3:
