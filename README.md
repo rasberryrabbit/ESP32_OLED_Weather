@@ -1,6 +1,6 @@
 # ESP32_OLED_Weather
   
-1.3" oled display. sh1106 controller.  
+1.3" oled display 128x64. sh1106 controller.  
 
 3.3V -- VCC  
 GND  -- GND  
