@@ -248,6 +248,8 @@ class OpenWeather:
                            else:
                                vpop=0.0
                            srain=re.search("rain\":{\"1h\":([0-9\.]+)",data)
+                           if srain is None:
+                               srain=re.search("snow\":{\"1h\":([0-9\.]+)",data)                               
                            if srain:
                                rain=float(srain.group(1))
                            else:
@@ -329,7 +331,7 @@ def displayinfo(bpop):
                 if wi[5]>0.0:
                     drawpop(px+50,i+16,wi[5])
                 if wi[9]>0.0:
-                    disp.text('%f' % (wi[9]),px+50,i+24)
+                    disp.text('%4.2f' % (wi[9]),px+50,i+24)
             else:
                 if wi[8]>0.0:
                     drawuvi(px+50,i+16,wi[8])
@@ -357,7 +359,7 @@ def displayinfoex(bpop):
                 if wi[5]>0.0:
                     drawpop(px+50,i+16,wi[5])
                 if wi[9]>0.0:
-                    disp.text('%f' % (wi[9]),px+50,i+24)
+                    disp.text('%4.2f' % (wi[9]),px+50,i+24)
             else:
                 if wi[8]>0.0:
                     drawuvi(px+50,i+16,wi[8])
