@@ -402,7 +402,8 @@ def cbTime(t):
     global timeoff,showuvi
     if showuvi==0:
         displayinfoTHW()
-    displayinfoex(showuvi<2)
+    if showuvi==1 or showuvi==3:
+        displayinfoex(showuvi<2)
     showuvi+=1
     showuvi%=4
     if timeoff>5:
