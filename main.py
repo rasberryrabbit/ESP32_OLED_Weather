@@ -344,7 +344,24 @@ def displayinfo(bpop):
             i+=32
         idx+=1
     disp.show()
-    
+
+def displayinfoTHW():
+    i=0
+    idx=0
+    px=random.randint(0,2)
+    for wi in winfo.weinfo:
+        if idx>0:
+            disp.fill_rect(0,i+8,44,24,0)
+            dt=epochtotime(wi[0],winfo.timeoffset)
+            disp.fill_rect(50,i,41,8,0)
+            disp.text('%2dH' % (dt[3]),px+58,i)
+            drawtemp(px+0,i+8,wi[1])
+            drawhumi(px+0,i+16,wi[3])
+            drawwind(px+0,i+24,wi[2])
+            i+=32
+        idx+=1
+    disp.show()    
+
 def displayinfoex(bpop):
     i=0
     idx=0
@@ -354,7 +371,8 @@ def displayinfoex(bpop):
     disp.text('%2d:%02d' %(rt[3],rt[4]),px+0,0)
     for wi in winfo.weinfo:
         if idx>0:
-            disp.fill_rect(50,i+16,41,16,0)
+            disp.fill_rect(50,i+8,41,24,0)
+            disp.text('%3d%%' % (wi[6]),px+50,i+8)
             if bpop:
                 if wi[5]>0.0:
                     drawpop(px+50,i+16,wi[5])
@@ -382,6 +400,8 @@ showuvi=0
 
 def cbTime(t):
     global timeoff,showuvi
+    if showuvi==0:
+        displayinfoTHW()
     displayinfoex(showuvi<2)
     showuvi+=1
     showuvi%=4
