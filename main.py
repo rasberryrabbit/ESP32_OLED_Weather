@@ -281,6 +281,10 @@ class OpenWeather:
 winfo=OpenWeather(lat,lon,appid)
 #print(946684800 + time.time() - 9*3600)
 
+def drawvline(x,y,h):
+    for yi in range(random.randint(0,1),h,2):
+        disp.pixel(x,y+yi,1)
+
 def drawtemp(x,y,t):
     disp.text('T',x,y)
     disp.text('%4.1f' % (t),x+10,y)
@@ -292,7 +296,7 @@ def drawhumi(x,y,h):
 def drawpop(x,y,pop):
     xp=int(pop*100)
     disp.text('%3d%%' % (xp),x,y)
-    disp.vline(x-2,y,8,1)
+    drawvline(x-2,y,8)
     
 def drawwind(x,y,wind):
     disp.text('W',x,y)
@@ -341,7 +345,7 @@ def displayinfo(bpop):
                 loadpbm(px+90,i,wi[4])
             else:
                 print('error',wi[4])
-            disp.vline(px+45,i+8,24,1)
+            drawvline(px+45,i+8,24)
             i+=32
         idx+=1
     disp.show()
