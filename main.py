@@ -292,6 +292,7 @@ def drawhumi(x,y,h):
 def drawpop(x,y,pop):
     xp=int(pop*100)
     disp.text('%3d%%' % (xp),x,y)
+    disp.vline(x-2,y,8,1)
     
 def drawwind(x,y,wind):
     disp.text('W',x,y)
@@ -371,7 +372,7 @@ def displayinfoex(bpop):
     disp.text('%2d:%02d' %(rt[3],rt[4]),px+0,0)
     for wi in winfo.weinfo:
         if idx>0:
-            disp.fill_rect(50,i+8,41,24,0)
+            disp.fill_rect(48,i+8,43,24,0)
             disp.text('%3d%%' % (wi[6]),px+50,i+8)
             if bpop:
                 if wi[5]>0.0:
@@ -406,11 +407,18 @@ def cbTime(t):
         displayinfoex(showuvi<2)
     showuvi+=1
     showuvi%=4
-    if timeoff>5:
-        timeoff=0
-        disp.contrast(0x5f)
-    elif timeoff>3:
-        disp.contrast(0)
+    # Night mode
+    rt=time.localtime(time.time()+winfo.timeoffset)
+    if rt[3]>20 or rt[3]<7:
+        if timeoff>=5:
+            timeoff=0
+            disp.contrast(0)
+    else:
+        if timeoff>=5:
+            timeoff=0
+            disp.contrast(0x5f)
+        elif timeoff==3:
+            disp.contrast(0)
     timeoff+=1
        
 def cbUpdate(t):
