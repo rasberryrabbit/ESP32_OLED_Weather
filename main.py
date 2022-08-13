@@ -298,6 +298,10 @@ def drawpop(x,y,pop):
     disp.text('%3d%%' % (xp),x,y)
     drawvline(x-2,y,8)
     
+def drawrain(x,y,rain):
+    disp.text('%4.2f' % (rain),x,y)
+    drawvline(x-2,y,8)    
+    
 def drawwind(x,y,wind):
     disp.text('W',x,y)
     disp.text('%4.1f' % (wind),x+10,y)
@@ -336,7 +340,7 @@ def displayinfo(bpop):
                 if wi[5]>0.0:
                     drawpop(px+50,i+16,wi[5])
                 if wi[9]>0.0:
-                    disp.text('%4.2f' % (wi[9]),px+50,i+24)
+                    drawrain(px+50,i+24,wi[9])
             else:
                 if wi[8]>0.0:
                     drawuvi(px+50,i+16,wi[8])
@@ -382,7 +386,7 @@ def displayinfoex(bpop):
                 if wi[5]>0.0:
                     drawpop(px+50,i+16,wi[5])
                 if wi[9]>0.0:
-                    disp.text('%4.2f' % (wi[9]),px+50,i+24)
+                    drawrain(px+50,i+24,wi[9])
             else:
                 if wi[8]>0.0:
                     drawuvi(px+50,i+16,wi[8])
