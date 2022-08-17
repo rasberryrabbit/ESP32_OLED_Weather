@@ -212,6 +212,11 @@ class OpenWeather:
                                ttemp=float(stemp.group(1))
                            else:
                                ttemp=0.0
+                           sftemp=re.search("feels_like\":([0-9\.]+)",data)
+                           if sftemp:
+                               ftemp=float(sftemp.group(1))
+                           else:
+                               ftemp=0.0
                            swind=re.search("wind_speed\":([0-9\.]+)",data)
                            if swind:
                                windspd=float(swind.group(1))
@@ -256,7 +261,7 @@ class OpenWeather:
                                rain=0.0
                            # info array
                            if self.firststamp<=dayw:
-                               self.weinfo.append([dayw,ttemp,windspd,hum,weicon,vpop,cloud,press,uvi,rain])
+                               self.weinfo.append([dayw,ttemp,windspd,hum,weicon,vpop,cloud,press,uvi,rain,ftemp])
                                self.imgoffset+=1
                            data=data[epos:]
                            if self.imgoffset>2:
@@ -288,6 +293,10 @@ def drawvline(x,y,h):
 def drawtemp(x,y,t):
     disp.text('T',x,y)
     disp.text('%4.1f' % (t),x+10,y)
+    
+def drawftemp(x,y,ft):
+    disp.text('F',x,y)
+    disp.text('%4.1f' % (ft),x+10,y)
     
 def drawhumi(x,y,h):
     disp.text('H',x,y)
@@ -354,7 +363,7 @@ def displayinfo(bpop):
         idx+=1
     disp.show()
 
-def displayinfoTHW():
+def displayinfoTHW(showft):
     i=0
     idx=0
     px=random.randint(0,2)
@@ -364,7 +373,10 @@ def displayinfoTHW():
             dt=epochtotime(wi[0],winfo.timeoffset)
             disp.fill_rect(50,i,41,8,0)
             disp.text('%2dH' % (dt[3]),px+58,i)
-            drawtemp(px+0,i+8,wi[1])
+            if showft:
+                drawftemp(px+0,i+8,wi[10])
+            else:
+                drawtemp(px+0,i+8,wi[1])
             drawhumi(px+0,i+16,wi[3])
             drawwind(px+0,i+24,wi[2])
             i+=32
@@ -410,7 +422,7 @@ showuvi=0
 def cbTime(t):
     global timeoff,showuvi
     if showuvi==0:
-        displayinfoTHW()
+        displayinfoTHW(timeoff>2)
     if showuvi==1 or showuvi==3:
         displayinfoex(showuvi<2)
     showuvi+=1
