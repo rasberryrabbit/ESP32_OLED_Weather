@@ -227,6 +227,11 @@ class OpenWeather:
                                hum=int(shum.group(1))
                            else:
                                hum=0
+                           sdew=re.search("dew_point\":([0-9\.]+)",data)
+                           if sdew:
+                               dew=float(sdew.group(1))
+                           else:
+                               dew=0.0 
                            scloud=re.search("clouds\":(\d+)",data)
                            if scloud:
                                cloud=int(scloud.group(1))
@@ -261,7 +266,7 @@ class OpenWeather:
                                rain=0.0
                            # info array
                            if self.firststamp<=dayw:
-                               self.weinfo.append([dayw,ttemp,windspd,hum,weicon,vpop,cloud,press,uvi,rain,ftemp])
+                               self.weinfo.append([dayw,ttemp,windspd,hum,weicon,vpop,cloud,press,uvi,rain,ftemp,dew])
                                self.imgoffset+=1
                            data=data[epos:]
                            if self.imgoffset>2:
@@ -297,7 +302,11 @@ def drawtemp(x,y,t):
 def drawftemp(x,y,ft):
     disp.text('F',x,y)
     disp.text('%4.1f' % (ft),x+10,y)
-    
+
+def drawdew(x,y,dew):
+    disp.text('D',x,y)
+    disp.text('%4.1f' % (dew),x+10,y)
+
 def drawhumi(x,y,h):
     disp.text('H',x,y)
     disp.text('%3d%%' % (h),x+10,y)
@@ -375,9 +384,10 @@ def displayinfoTHW(showft):
             disp.text('%2dH' % (dt[3]),px+58,i)
             if showft:
                 drawftemp(px+0,i+8,wi[10])
+                drawdew(px+0,i+16,wi[11])
             else:
                 drawtemp(px+0,i+8,wi[1])
-            drawhumi(px+0,i+16,wi[3])
+                drawhumi(px+0,i+16,wi[3])
             drawwind(px+0,i+24,wi[2])
             i+=32
         idx+=1
