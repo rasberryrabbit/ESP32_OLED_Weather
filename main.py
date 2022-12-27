@@ -207,12 +207,12 @@ class OpenWeather:
                                dayw=0
                            if self.firststamp==0:
                                self.firststamp=dayw
-                           stemp=re.search("temp\":([0-9\.]+)",data)
+                           stemp=re.search("temp\":([0-9\.\-]+)",data)
                            if stemp:
                                ttemp=float(stemp.group(1))
                            else:
                                ttemp=0.0
-                           sftemp=re.search("feels_like\":([0-9\.]+)",data)
+                           sftemp=re.search("feels_like\":([0-9\.\-]+)",data)
                            if sftemp:
                                ftemp=float(sftemp.group(1))
                            else:
@@ -227,7 +227,7 @@ class OpenWeather:
                                hum=int(shum.group(1))
                            else:
                                hum=0
-                           sdew=re.search("dew_point\":([0-9\.]+)",data)
+                           sdew=re.search("dew_point\":([0-9\.\-]+)",data)
                            if sdew:
                                dew=float(sdew.group(1))
                            else:
