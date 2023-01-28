@@ -297,15 +297,30 @@ def drawvline(x,y,h):
 
 def drawtemp(x,y,t):
     disp.text('T',x,y)
-    disp.text('%4.1f' % (t),x+10,y)
+    if t>0:
+        disp.text('%4.1f' % (t),x+10,y)
+    else:
+        disp.fill_rect(x+8,y,4*8+2,8,1)
+        disp.hline(x+8,y+4,3,0)
+        disp.text('%4.1f' % (-t),x+10,y,0)
     
 def drawftemp(x,y,ft):
     disp.text('F',x,y)
-    disp.text('%4.1f' % (ft),x+10,y)
+    if ft>0:
+        disp.text('%4.1f' % (ft),x+10,y)
+    else:
+        disp.fill_rect(x+8,y,4*8+2,8,1)
+        disp.hline(x+8,y+4,3,0)
+        disp.text('%4.1f' % (-ft),x+10,y,0)
 
 def drawdew(x,y,dew):
     disp.text('D',x,y)
-    disp.text('%4.1f' % (dew),x+10,y)
+    if dew>0:
+        disp.text('%4.1f' % (dew),x+10,y)
+    else:
+        disp.fill_rect(x+8,y,4*8+2,8,1)
+        disp.hline(x+8,y+4,3,0)
+        disp.text('%4.1f' % (-dew),x+10,y,0)
 
 def drawhumi(x,y,h):
     disp.text('H',x,y)
