@@ -328,12 +328,12 @@ def drawhumi(x,y,h):
     
 def drawpop(x,y,pop):
     xp=int(pop*100)
-    disp.text('%3d%%' % (xp),x,y)
-    drawvline(x-2,y,8)
+    disp.fill_rect(x-1,y,4*8+2,8,1)
+    disp.text('%3d%%' % (xp),x,y,0)
     
 def drawrain(x,y,rain):
-    disp.text('%4.2f' % (rain),x,y)
-    drawvline(x-2,y,8)    
+    disp.fill_rect(x-1,y,4*8+2,8,1)
+    disp.text('%4.2f' % (rain),x,y,0)
     
 def drawwind(x,y,wind):
     disp.text('W',x,y)
