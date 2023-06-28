@@ -87,6 +87,7 @@ def tryconnect(dispid):
                       if dispid:
                           disp.text(ssid,0,8)
                       print('Connect %s' % (ssid))
+                      break
               # reset ignore list
               if ap_count==0:
                   ignlist={}
