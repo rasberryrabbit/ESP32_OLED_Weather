@@ -138,6 +138,7 @@ class OpenWeather:
     firststamp=0
     error_count=0
     weinfo=[]
+    lastsynctime=0
     
     def __init__(self,lat,lon,appid):
         self.last_remain=b''
@@ -152,6 +153,17 @@ class OpenWeather:
             print('wait sync')
             synctime()
             time.sleep_ms(1000)
+
+        if lastsynctime==0:
+          lastsynctime=time.time()
+        else:
+          if time.time()-lastsynctime>=1296000:
+            try:
+              ntptime.settime()
+              lastsynctime=time.time()
+            except Exception as e:
+              pass
+
         try:
             sock=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             saddr=socket.getaddrinfo('api.openweathermap.org',80)[0][-1]
