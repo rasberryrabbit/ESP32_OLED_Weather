@@ -142,6 +142,7 @@ class OpenWeather:
     
     def __init__(self,lat,lon,appid):
         self.last_remain=b''
+        self.lastsynctime=0
         self.to_send=b'GET /data/2.5/onecall?lat=%s&lon=%s&exclude=minutely,daily,alerts&appid=%s&units=metric HTTP/1.1\r\nHost: api.openweathermap.org\r\nConnection: keep-alive\r\nAccept: */*\r\n\r\n' % (lat,lon,appid)
     
     def GetInfo(self):
@@ -154,16 +155,15 @@ class OpenWeather:
             synctime()
             time.sleep_ms(1000)
 
-        if lastsynctime==0:
-          lastsynctime=time.time()
+        if self.lastsynctime==0:
+            self.lastsynctime=time.time()
         else:
-          if time.time()-lastsynctime>=1296000:
-            try:
-              ntptime.settime()
-              lastsynctime=time.time()
-            except Exception as e:
-              pass
-
+            if time.time()-self.lastsynctime>=1296000:
+                try:
+                    ntptime.settime()
+                    self.lastsynctime=time.time()
+                except Exception as e:
+                    pass
         try:
             sock=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             saddr=socket.getaddrinfo('api.openweathermap.org',80)[0][-1]
